@@ -1,0 +1,64 @@
+########################################################################################
+def NormalizeURL(url):
+
+	return url
+
+########################################################################################
+def MetadataObjectForURL(url):
+
+	page = HTML.ElementFromURL(url)
+
+	try:
+		title = page.xpath("//div[@class='most-recent']/h2[3]/text()")[0]
+	except:
+		title = ""
+	try:
+		description = page.xpath("//p[@class='description']/text()")[0]
+	except:
+		description = ""
+	thumb = url
+
+	return VideoClipObject(
+		title = title,
+		summary = description,
+		thumb = thumb
+	)
+
+########################################################################################
+def MediaObjectsForURL(url):
+
+	return [
+        	MediaObject(
+			parts = [
+				PartObject(
+					key = 
+						Callback(
+							PlayVideo,
+							url = url,
+							fmt = 'hi',
+							post_url=url
+						)
+					)
+				],
+			video_resolution = 720,
+			bitrate = 3000,
+			container = Container.MP4,
+			video_codec = VideoCodec.H264,
+			audio_codec = AudioCodec.AAC,
+			audio_channels = 2,
+			optimized_for_streaming = True
+			)
+	]
+
+########################################################################################
+@indirect
+def PlayVideo(url, fmt):
+
+
+	html = HTTP.Request(url).content
+	vodlocker = Regex('http://vodlocker.com/([^"]+).html').search(html).groups()[0]
+	
+	vodhtml = HTTP.Request('http://vodlocker.com/' + vodlocker + '.html').content
+	video_url = Regex('file:\s"([^"]+)"').search(vodhtml).groups()[0]
+
+	return IndirectResponse(VideoClipObject, key=video_url)
