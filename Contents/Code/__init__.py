@@ -24,14 +24,7 @@ def Start():
 	VideoClipObject.art = R(ART)
 
 	HTTP.Headers['Accept'] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-	HTTP.Headers['Accept-Encoding'] = "gzip, deflate"
-	HTTP.Headers['Accept-Language'] = "en-US,en;q=0.5"
-	HTTP.Headers['Cache-Control'] = "max-age=0"
-	HTTP.Headers['Connection'] = "keep-alive"
-	HTTP.Headers['Cookie'] = "__cfduid=d345202ed3eb4cc8194e92f763bba86511426283176"
-	HTTP.Headers['DNT'] = "1"
 	HTTP.Headers['Host'] = "chan131.so"
-	HTTP.Headers['User-Agent'] = "Mozilla/5.0 (Windows NT 6.1; rv:35.0.1) Gecko/20100101 Firefox/35.0.1 anonymized by Abelssoft 1584666243"
 	
 ######################################################################################
 # Menu hierarchy
@@ -51,8 +44,13 @@ def Shows():
 	html = HTML.ElementFromURL(BASE_URL + '/tv-shows')
 
 	for each in html.xpath("//div[@class='recent']/ul/li"):
-		title = each.xpath("./a/text()")[0]
-		url = each.xpath("./a/@href")[0]
+		try:
+			title = each.xpath("./a/text()")[0]
+			url = each.xpath("./a/@href")[0]
+		except:
+			title = ""
+			url = ""
+
 		oc.add(DirectoryObject(
 			key = Callback(ShowEpisodes, title = title, url = url),
 				title = title,
