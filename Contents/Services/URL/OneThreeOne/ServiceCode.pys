@@ -14,7 +14,7 @@ import jsbeautifier
 HTTP_HEADERS = {
 	'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 	'Cookie':'__cfduid=d2d611e02a9ab888496a39b15c4b40bba1426641007; lang=english',
-	'Host':'chan131.so'
+	'Host':'vodlocker.com'
 }
 
 
@@ -78,7 +78,10 @@ def PlayVideo(url, fmt):
 	html = HTTP.Request(url).content
 	html = HTML.ElementFromURL(url)
 	for each in html.xpath("//div[@class='tabcontents']/div"):
-		view_url = each.xpath("./iframe/@src")[0]
+		try:
+			view_url = each.xpath("./iframe/@src")[0]
+		except:
+			continue
 		if "exashare" in view_url:
 			video_html = HTTP.Request(view_url).content
 			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
@@ -95,5 +98,8 @@ def PlayVideo(url, fmt):
 		elif "filehoot" in view_url:
 			video_html = HTTP.Request(view_url).content
 			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
+		elif "allmyvideos" in view_url:
+			video_html = HTTP.Request(view_url).content
+			video_url = Regex('"file" : \"([^"]+)\"').search(video_html).groups()[0]
 
 	return IndirectResponse(VideoClipObject, key=video_url)
