@@ -1,3 +1,24 @@
+import re, json
+import os
+import sys
+import base64
+
+try:
+	path = os.getcwd().split("?\\")[1].split('Plug-in Support')[0]+"Plug-ins\OneThreeOne.bundle\Contents\Services\URL\OneThreeOne\Modules"
+except:
+	path = os.getcwd().split("Plug-in Support")[0]+"Plug-ins/OneThreeOne.bundle/Contents/Services/URL/OneThreeOne/Modules"
+if path not in sys.path:
+	sys.path.append(path)
+
+import jsbeautifier
+
+HTTP_HEADERS = {
+	'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+	'Cookie':'__cfduid=d2d611e02a9ab888496a39b15c4b40bba1426641007; lang=english',
+	'Host':'vodlocker.com'
+}
+
+
 ########################################################################################
 def NormalizeURL(url):
 
@@ -35,18 +56,17 @@ def MediaObjectsForURL(url):
 						Callback(
 							PlayVideo,
 							url = url,
-							fmt = 'hi',
-							post_url=url
+							fmt = 'hi'
 						)
 					)
 				],
 			video_resolution = 720,
-			bitrate = 3000,
+			bitrate = 1500,
 			container = Container.MP4,
 			video_codec = VideoCodec.H264,
 			audio_codec = AudioCodec.AAC,
 			audio_channels = 2,
-			optimized_for_streaming = True
+			optimized_for_streaming = True if Client.Product != 'Plex Web' else False
 			)
 	]
 
@@ -56,9 +76,15 @@ def PlayVideo(url, fmt):
 
 
 	html = HTTP.Request(url).content
-	vodlocker = Regex('http://vodlocker.com/([^"]+).html').search(html).groups()[0]
 	
-	vodhtml = HTTP.Request('http://vodlocker.com/' + vodlocker + '.html').content
-	video_url = Regex('file:\s"([^"]+)"').search(vodhtml).groups()[0]
+	try:
+		vodlocker = Regex('http://vodlocker.com/([^"]+).html').search(html).groups()[0]
+		vodhtml = HTTP.Request('http://vodlocker.com/' + vodlocker + '.html').content
+		video_url = Regex('file:\s"([^"]+)"').search(vodhtml).groups()[0]
+	except:
+		vodlocker = Regex('http://youwatch.org/([^"]+).html').search(html).groups()[0]
+		videohtml = HTML.ElementFromURL('http://youwatch.org/' + vodlocker + '.html')
+		beautify = jsbeautifier.beautify(videohtml.xpath("//div[@id='player_code']/script[2]/text()")[0])
+		video_url = Regex('file:\s"([^"]+)"').search(beautify).groups()[0]
 
 	return IndirectResponse(VideoClipObject, key=video_url)

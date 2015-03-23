@@ -90,7 +90,7 @@ def EpisodeDetail(title, url):
 	except:
 		description = ""
 	thumb = url
-	
+
 	oc.add(VideoClipObject(
 		title = title,
 		summary = description,
