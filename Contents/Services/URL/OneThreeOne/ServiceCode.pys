@@ -74,17 +74,26 @@ def MediaObjectsForURL(url):
 @indirect
 def PlayVideo(url, fmt):
 
-
+	video_url = ""
 	html = HTTP.Request(url).content
-	
-	try:
-		vodlocker = Regex('http://vodlocker.com/([^"]+).html').search(html).groups()[0]
-		vodhtml = HTTP.Request('http://vodlocker.com/' + vodlocker + '.html').content
-		video_url = Regex('file:\s"([^"]+)"').search(vodhtml).groups()[0]
-	except:
-		vodlocker = Regex('http://youwatch.org/([^"]+).html').search(html).groups()[0]
-		videohtml = HTML.ElementFromURL('http://youwatch.org/' + vodlocker + '.html')
-		beautify = jsbeautifier.beautify(videohtml.xpath("//div[@id='player_code']/script[2]/text()")[0])
-		video_url = Regex('file:\s"([^"]+)"').search(beautify).groups()[0]
+	html = HTML.ElementFromURL(url)
+	for each in html.xpath("//div[@class='tabcontents']/div"):
+		view_url = each.xpath("./iframe/@src")[0]
+		if "exashare" in view_url:
+			video_html = HTTP.Request(view_url).content
+			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
+		elif "vshare" in view_url:
+			video_html = HTTP.Request(view_url).content
+			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
+		elif "youwatch" in view_url:
+			video_html = HTML.ElementFromURL(view_url)
+			beautify = jsbeautifier.beautify(video_html.xpath("//div[@id='player_code']/script[2]/text()")[0])			
+			video_url = Regex('file:\s"([^"]+)"').search(beautify).groups()[0]
+		elif "vodlocker" in view_url:
+			video_html = HTTP.Request(view_url).content
+			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
+		elif "filehoot" in view_url:
+			video_html = HTTP.Request(view_url).content
+			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
 
 	return IndirectResponse(VideoClipObject, key=video_url)
