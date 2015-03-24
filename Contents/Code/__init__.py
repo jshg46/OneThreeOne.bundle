@@ -23,8 +23,9 @@ def Start():
 	VideoClipObject.thumb = R(ICON_SERIES)
 	VideoClipObject.art = R(ART)
 
-	HTTP.Headers['Accept'] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-	HTTP.Headers['Host'] = "chan131.so"
+	HTTP.CacheTime = CACHE_1HOUR
+	HTTP.Headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36'
+	HTTP.Headers['Referer'] = "chan131.so"
 	
 ######################################################################################
 # Menu hierarchy
