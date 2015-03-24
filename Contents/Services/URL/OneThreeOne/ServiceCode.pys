@@ -83,23 +83,41 @@ def PlayVideo(url, fmt):
 		except:
 			continue
 		if "exashare" in view_url:
-			video_html = HTTP.Request(view_url).content
-			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
+			exashare = HTTP.Request(view_url).content
+			try:
+				video_url = Regex('file:\s"([^"]+)"').search(exashare).groups()[0]	
+			except:
+				pass
 		elif "vshare" in view_url:
-			video_html = HTTP.Request(view_url).content
-			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
+			vshare = HTTP.Request(view_url).content
+			try:
+				video_url = Regex('file:\s"([^"]+)"').search(vshare).groups()[0]
+			except:
+				pass
 		elif "youwatch" in view_url:
-			video_html = HTML.ElementFromURL(view_url)
-			beautify = jsbeautifier.beautify(video_html.xpath("//div[@id='player_code']/script[2]/text()")[0])			
-			video_url = Regex('file:\s"([^"]+)"').search(beautify).groups()[0]
+			youwatch = HTML.ElementFromURL(view_url)
+			beautify = jsbeautifier.beautify(youwatch.xpath("//div[@id='player_code']/script[2]/text()")[0])
+			try:
+				video_url = Regex('file:\s"([^"]+)"').search(beautify).groups()[0]
+			except:
+				pass
 		elif "vodlocker" in view_url:
-			video_html = HTTP.Request(view_url).content
-			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
+			vodlocker = HTTP.Request(view_url).content
+			try:
+				video_url = Regex('file: "([^"]+)"').search(vodlocker).groups()[0]
+			except:
+				pass
 		elif "filehoot" in view_url:
-			video_html = HTTP.Request(view_url).content
-			video_url = Regex('file:\s"([^"]+)"').search(video_html).groups()[0]
+			filehoot = HTTP.Request(view_url).content
+			try:
+				video_url = Regex('file:\s"([^"]+)"').search(filehoot).groups()[0]
+			except:
+				pass
 		elif "allmyvideos" in view_url:
-			video_html = HTTP.Request(view_url).content
-			video_url = Regex('"file" : \"([^"]+)\"').search(video_html).groups()[0]
+			allmyvideos = HTTP.Request(view_url).content
+			try:
+				video_url = Regex('\"file\" : \"([^"]+)\"').search(allmyvideos).groups()[0]
+			except:
+				pass
 
 	return IndirectResponse(VideoClipObject, key=video_url)
