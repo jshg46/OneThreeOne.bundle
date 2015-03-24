@@ -14,7 +14,7 @@ import jsbeautifier
 HTTP_HEADERS = {
 	'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 	'Cookie':'__cfduid=d2d611e02a9ab888496a39b15c4b40bba1426641007; lang=english',
-	'Host':'vodlocker.com'
+	'Host':'chan131.so'
 }
 
 
