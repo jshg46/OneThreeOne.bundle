@@ -25,12 +25,7 @@ def Start():
 	VideoClipObject.art = R(ART)
 
 	HTTP.CacheTime = CACHE_1HOUR
-<<<<<<< HEAD
 	HTTP.Headers['User-Agent'] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36"
-	HTTP.Headers['Accept'] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-=======
-	HTTP.Headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36'
->>>>>>> origin/master
 	HTTP.Headers['Host'] = "chan131.so"
 	
 ######################################################################################
