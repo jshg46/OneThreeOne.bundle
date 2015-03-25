@@ -119,5 +119,7 @@ def PlayVideo(url, fmt):
 				break
 			except:
 				pass
+		else:
+			raise Ex.MediaNotAvailable
 
 	return IndirectResponse(VideoClipObject, key=video_url)

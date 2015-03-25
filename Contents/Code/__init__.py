@@ -8,7 +8,8 @@ TITLE = "Channel 131"
 PREFIX = "/video/onethreeone"
 ART = "art-default.jpg"
 ICON = "icon-default.png"
-ICON_SERIES = "icon-tv.png"
+ICON_MOVIES = "icon-tv.png"
+ICON_LIST = "icon-list.png"
 BASE_URL = "http://chan131.so"
 
 ######################################################################################
@@ -18,14 +19,15 @@ def Start():
 
 	ObjectContainer.title1 = TITLE
 	ObjectContainer.art = R(ART)
-	DirectoryObject.thumb = R(ICON_SERIES)
+	DirectoryObject.thumb = R(ICON_LIST)
 	DirectoryObject.art = R(ART)
-	VideoClipObject.thumb = R(ICON_SERIES)
+	VideoClipObject.thumb = R(ICON_MOVIES)
 	VideoClipObject.art = R(ART)
 
 	HTTP.CacheTime = CACHE_1HOUR
-	HTTP.Headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36'
-	HTTP.Headers['Referer'] = "chan131.so"
+	HTTP.Headers['User-Agent'] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36"
+	HTTP.Headers['Accept'] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+	HTTP.Headers['Host'] = "chan131.so"
 	
 ######################################################################################
 # Menu hierarchy
@@ -48,14 +50,16 @@ def Shows():
 		try:
 			title = each.xpath("./a/text()")[0]
 			url = each.xpath("./a/@href")[0]
+			thumb = url
 		except:
 			title = ""
 			url = ""
+			thumb = ""
 
 		oc.add(DirectoryObject(
 			key = Callback(ShowEpisodes, title = title, url = url),
 				title = title,
-				thumb = ICON_SERIES
+				thumb = Resource.ContentsOfURLWithFallback(url = thumb, fallback='icon-tv.png')
 				)
 		)
 	return oc
@@ -74,7 +78,7 @@ def ShowEpisodes(title, url):
 		oc.add(DirectoryObject(
 			key = Callback(EpisodeDetail, title = title, url = url),
 				title = title,
-				thumb = ICON_SERIES
+				thumb = 'icon-tv.png'
 				)
 		)
 	return oc
@@ -95,7 +99,7 @@ def EpisodeDetail(title, url):
 	oc.add(VideoClipObject(
 		title = title,
 		summary = description,
-		thumb = thumb,
+		thumb = Resource.ContentsOfURLWithFallback(url = thumb, fallback='icon-tv.png'),
 		url = url
 		)
 	)	
