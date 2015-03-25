@@ -76,7 +76,15 @@ def PlayVideo(url, fmt):
 			view_url = each.xpath("./iframe/@src")[0]
 		except:
 			continue
-		if "exashare" in view_url:
+		if "youwatch" in view_url:
+			youwatch = HTML.ElementFromURL(view_url)
+			beautify = jsbeautifier.beautify(youwatch.xpath("//div[@id='player_code']/script[2]/text()")[0])
+			try:
+				video_url = Regex('file:\s"([^"]+)"').search(beautify).groups()[0]
+				break
+			except:
+				pass
+		elif "exashare" in view_url:
 			exashare = HTTP.Request(view_url).content
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(exashare).groups()[0]
@@ -87,14 +95,6 @@ def PlayVideo(url, fmt):
 			vshare = HTTP.Request(view_url).content
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(vshare).groups()[0]
-				break
-			except:
-				pass
-		elif "youwatch" in view_url:
-			youwatch = HTML.ElementFromURL(view_url)
-			beautify = jsbeautifier.beautify(youwatch.xpath("//div[@id='player_code']/script[2]/text()")[0])
-			try:
-				video_url = Regex('file:\s"([^"]+)"').search(beautify).groups()[0]
 				break
 			except:
 				pass
@@ -119,7 +119,5 @@ def PlayVideo(url, fmt):
 				break
 			except:
 				pass
-		else:
-			raise Ex.MediaNotAvailable
 
 	return IndirectResponse(VideoClipObject, key=video_url)
