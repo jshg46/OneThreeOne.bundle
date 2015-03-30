@@ -1,6 +1,6 @@
 ######################################################################################
 #
-#	Channel 131 - v0.10
+#	Channel 131 - v1.00
 #
 ######################################################################################
 
@@ -8,8 +8,13 @@ TITLE = "Channel 131"
 PREFIX = "/video/onethreeone"
 ART = "art-default.jpg"
 ICON = "icon-default.png"
-ICON_MOVIES = "icon-tv.png"
 ICON_LIST = "icon-list.png"
+ICON_COVER = "icon-cover.png"
+ICON_SEARCH = "icon-search.png"
+ICON_NEXT = "icon-next.png"
+ICON_MOVIES = "icon-movies.png"
+ICON_SERIES = "icon-series.png"
+ICON_QUEUE = "icon-queue.png"
 BASE_URL = "http://chan131.so"
 
 ######################################################################################
@@ -49,7 +54,7 @@ def Shows():
 		try:
 			title = each.xpath("./a/text()")[0]
 			url = each.xpath("./a/@href")[0]
-			thumb = url
+			thumb = ""
 		except:
 			title = ""
 			url = ""
@@ -58,7 +63,7 @@ def Shows():
 		oc.add(DirectoryObject(
 			key = Callback(ShowEpisodes, title = title, url = url),
 				title = title,
-				thumb = Resource.ContentsOfURLWithFallback(url = thumb, fallback='icon-tv.png')
+				thumb = Resource.ContentsOfURLWithFallback(url = thumb, fallback='icon-series.png')
 				)
 		)
 	return oc
@@ -73,11 +78,11 @@ def ShowEpisodes(title, url):
 	for each in html.xpath("//div[@class='recent']/ul/li"):
 		title = each.xpath("./a/text()")[0]
 		url = each.xpath("./a/@href")[0]
-		thumb = url
+		thumb = ""
 		oc.add(DirectoryObject(
 			key = Callback(EpisodeDetail, title = title, url = url),
 				title = title,
-				thumb = 'icon-tv.png'
+				thumb = Resource.ContentsOfURLWithFallback(url = thumb, fallback='icon-series.png')
 				)
 		)
 	return oc
@@ -98,7 +103,7 @@ def EpisodeDetail(title, url):
 	oc.add(VideoClipObject(
 		title = title,
 		summary = description,
-		thumb = Resource.ContentsOfURLWithFallback(url = thumb, fallback='icon-tv.png'),
+		thumb = Resource.ContentsOfURLWithFallback(url = thumb, fallback='icon-series.png'),
 		url = url
 		)
 	)	

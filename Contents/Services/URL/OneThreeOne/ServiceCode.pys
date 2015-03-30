@@ -67,8 +67,6 @@ def MediaObjectsForURL(url):
 ########################################################################################
 @indirect
 def PlayVideo(url, fmt):
-
-	video_url = ""
 	html = HTTP.Request(url).content
 	html = HTML.ElementFromURL(url)
 	for each in html.xpath("//div[@class='tabcontents']/div"):
