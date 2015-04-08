@@ -93,6 +93,13 @@ def PlayVideo(url, fmt):
 				break
 			except:
 				pass
+		elif "filehoot" in vurl:
+			filehoot = HTTP.Request(vurl, cacheTime = CACHE_1MONTH).content
+			try:
+				video_url = Regex('file:\s"([^"]+)"').search(filehoot).groups()[0]
+				break
+			except:
+				pass
 		elif "vidspot" in vurl:
 			vidspot = HTTP.Request(vurl, cacheTime = CACHE_1MONTH).content
 			try:
