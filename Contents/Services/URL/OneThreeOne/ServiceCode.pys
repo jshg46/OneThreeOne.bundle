@@ -68,19 +68,20 @@ def MediaObjectsForURL(url):
 @indirect
 def PlayVideo(url, fmt):
 	html = HTML.ElementFromURL(url)
-	view_url = ""
-	for each in html.xpath("//div[@class='tabcontents']/div"):
+	view_url = ""	
+	for each in html.xpath("//div[contains(@id,'view')]"):
 		try:
-			view_url = str(each.xpath("./iframe/@src")[0]) + "," + view_url
+			frame_src = str(each.xpath("./b/@date-iframe"))
+			view_url = view_url + "," + str(each.xpath("./b/@date-iframe")).replace("<iframe src='","",1).replace("' frameborder='0' marginwidth='0' marginheight='0' scrolling='no' width='728' height='425'></iframe>","",1).replace('[\"','',1).replace('\"]','',1)
 		except:
 			continue
 
-	view_url = view_url.rstrip(',')
-	view_url = sorted(view_url.split(','), key=str.lower)
+	view_url = view_url.lstrip(',')
+	view_url = view_url.split(',')
 
 	for vurl in view_url:
 		if "exashare" in vurl:
-			exashare = HTTP.Request(vurl, cacheTime = CACHE_1MONTH).content
+			exashare = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(exashare).groups()[0]
 				return IndirectResponse(VideoClipObject, key=video_url)
@@ -88,7 +89,7 @@ def PlayVideo(url, fmt):
 			except:
 				pass
 		elif "filehoot" in vurl:
-			filehoot = HTTP.Request(vurl, cacheTime = CACHE_1MONTH).content
+			filehoot = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(filehoot).groups()[0]
 				return IndirectResponse(VideoClipObject, key=video_url)
@@ -96,7 +97,7 @@ def PlayVideo(url, fmt):
 			except:
 				pass
 		elif "vidspot" in vurl:
-			vidspot = HTTP.Request(vurl, cacheTime = CACHE_1MONTH).content
+			vidspot = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('"sources" : \[\n\s+{\n\s+"file" : "([^"]+)"').search(vidspot).groups()[0]
 				return IndirectResponse(VideoClipObject, key=video_url)
@@ -104,7 +105,7 @@ def PlayVideo(url, fmt):
 			except:
 				pass
 		elif "vodlocker" in vurl:
-			vodlocker = HTTP.Request(vurl, cacheTime = CACHE_1MONTH).content
+			vodlocker = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('file: "([^"]+)"').search(vodlocker).groups()[0]
 				return IndirectResponse(VideoClipObject, key=video_url)
@@ -112,7 +113,7 @@ def PlayVideo(url, fmt):
 			except:
 				pass
 		elif "vshare" in vurl:
-			vshare = HTTP.Request(vurl, cacheTime = CACHE_1MONTH).content
+			vshare = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(vshare).groups()[0]
 				return IndirectResponse(VideoClipObject, key=video_url)
