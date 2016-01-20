@@ -49,7 +49,6 @@ def Shows():
 
 	oc = ObjectContainer()
 	html = HTML.ElementFromURL(BASE_URL + '/tv-shows')
-
 	for each in html.xpath("//div[@class='recent']/ul/li"):
 		try:
 			title = each.xpath("./a/text()")[0]
@@ -74,7 +73,6 @@ def ShowEpisodes(title, url):
 
 	oc = ObjectContainer(title1 = title)
 	html = HTML.ElementFromURL(url)
-
 	for each in html.xpath("//div[@class='recent']/ul/li"):
 		title = each.xpath("./a/text()")[0]
 		url = each.xpath("./a/@href")[0]
@@ -108,4 +106,4 @@ def EpisodeDetail(title, url):
 		)
 	)	
 	
-	return oc	
+	return oc

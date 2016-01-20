@@ -53,19 +53,11 @@ def MediaObjectsForURL(url):
 							post_url = url
 						)
 					)
-				],
-			video_resolution = 720,
-			bitrate = 1500,
-			container = Container.MP4,
-			video_codec = VideoCodec.H264,
-			audio_codec = AudioCodec.AAC,
-			audio_channels = 2,
-			optimized_for_streaming = True if Client.Product != 'Plex Web' else False
+				]
 			)
 	]
 
 ########################################################################################
-@indirect
 def PlayVideo(url, fmt):
 	html = HTML.ElementFromURL(url)
 	view_url = ""	
@@ -84,7 +76,7 @@ def PlayVideo(url, fmt):
 			exashare = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(exashare).groups()[0]
-				return IndirectResponse(VideoClipObject, key=video_url)
+				return Redirect(video_url)
 				break
 			except:
 				pass
@@ -92,7 +84,7 @@ def PlayVideo(url, fmt):
 			filehoot = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(filehoot).groups()[0]
-				return IndirectResponse(VideoClipObject, key=video_url)
+				return Redirect(video_url)
 				break
 			except:
 				pass
@@ -100,7 +92,7 @@ def PlayVideo(url, fmt):
 			vidspot = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('"sources" : \[\n\s+{\n\s+"file" : "([^"]+)"').search(vidspot).groups()[0]
-				return IndirectResponse(VideoClipObject, key=video_url)
+				return Redirect(video_url)
 				break
 			except:
 				pass
@@ -108,7 +100,7 @@ def PlayVideo(url, fmt):
 			vodlocker = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('file: "([^"]+)"').search(vodlocker).groups()[0]
-				return IndirectResponse(VideoClipObject, key=video_url)
+				return Redirect(video_url)
 				break
 			except:
 				pass
@@ -116,7 +108,7 @@ def PlayVideo(url, fmt):
 			vshare = HTTP.Request(vurl, cacheTime = CACHE_1HOUR).content
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(vshare).groups()[0]
-				return IndirectResponse(VideoClipObject, key=video_url)
+				return Redirect(video_url)
 				break
 			except:
 				pass
@@ -125,7 +117,7 @@ def PlayVideo(url, fmt):
 			beautify = jsbeautifier.beautify(youwatch.xpath("//div[@id='player_code']/script[2]/text()")[0])
 			try:
 				video_url = Regex('file:\s"([^"]+)"').search(beautify).groups()[0]
-				return IndirectResponse(VideoClipObject, key=video_url)
+				return Redirect(video_url)
 				break
 			except:
 				pass
