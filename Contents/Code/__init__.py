@@ -48,7 +48,7 @@ def MainMenu():
 def Shows():
 
 	oc = ObjectContainer()
-	html = HTML.ElementFromURL(BASE_URL + '/tv-shows')
+	html = HTML.ElementFromURL(BASE_URL + '/watch-tv')
 	for each in html.xpath("//div[@class='recent']/ul/li"):
 		try:
 			title = each.xpath("./a/text()")[0]
